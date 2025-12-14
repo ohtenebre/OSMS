@@ -137,6 +137,18 @@ def verify(bits):
         return 1
     return 0
 
+def signal_N(bits, N):
+    symbols = bpsk(bits)
+    symbols = upsampling(symbols, N)
+    signal = np.zeros(2 * len(symbols))
+    signal[:len(symbols)] = symbols
+    return signal
+
+def get_spectrum(signal):
+    amp = np.fft.fftshift(np.fft.fft(signal))
+    freq = np.fft.fftshift(np.fft.fftfreq(len(signal), d=1))
+    return freq, np.abs(amp)
+
 ## 1) Введите с клавиатуры ваши имя и фамилию латиницей
 print("Введите ваше имя и фамилию")
 FI = input()
@@ -325,22 +337,25 @@ else:
 # графике спектры всех трех сигналов (с короткими, средними и
 # длинными символами).
 
-# FFT исходного сигнала
-spectrum = np.fft.fft(signal)
-# spectrum = np.fft.fftshift(spectrum)
-amplitude = np.abs(spectrum)
+N_short = N // 2
+N_mid = N
+N_long = 2 * N
 
-receive_spectrum = (np.fft.fft(received_signal))
-# receive_spectrum = np.fft.fftshift(receive_spectrum)
-receive_amplitude = np.abs(receive_spectrum)
+signal_short = signal_N(total_bits, N_short)
+signal_mid = signal_N(total_bits, N_mid)
+signal_long = signal_N(total_bits, N_long)
 
-# Для графика
-frequencies = (np.fft.fftfreq(len(signal), d=1))
-receive_frequencies = (np.fft.fftfreq(len(received_signal), d=1))
+f_s, A_s = get_spectrum(signal_short)
+f_m, A_m = get_spectrum(signal_mid)
+f_l, A_l = get_spectrum(signal_long)
 
 plt.figure()
-plt.plot(frequencies, amplitude)
-plt.plot(receive_frequencies, receive_amplitude)
-plt.title("Спектр сигнала")
-# plt.savefig("Specters.png")
+plt.plot(f_s, A_s, label=f"N = {N_short}")
+plt.plot(f_m, A_m, label=f"N = {N_mid}")
+plt.plot(f_l, A_l, label=f"N = {N_long}")
+plt.title("Спектры сигналов при разной длительности символа")
+plt.xlabel("Частота")
+plt.ylabel("Амплитуда")
+plt.legend()
+plt.grid()
 plt.show()
