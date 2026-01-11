@@ -1,75 +1,45 @@
-import random
 import numpy as np
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
+import glob
 
-def compute_CRC(bits, G_x):
-    r = len(G_x) - 1
-    temp = bits + [0] * r
-
-    for i in range(len(bits)):
-        if temp[i] == 1:
-            for j in range(len(G_x)):
-                temp[i + j] ^= G_x[j]
-
-    return temp[len(bits):]
-
-def verify(bits_with_crc, G_x, N):
-    r = len(G_x) - 1
-    temp = bits_with_crc.copy()
-
-    for i in range(N):
-        if temp[i] == 1:
-            for j in range(len(G_x)):
-                temp[i + j] ^= G_x[j]
-
-    return all(bit == 0 for bit in temp[N:])
-
-def inject_errors(bits, k):
-    idx = random.sample(range(len(bits)), k)
-    for i in idx:
-        bits[i] ^= 1
-
-def experiment(N, G_x):
-    r = len(G_x) - 1
-    prob = []
-
-    for k in range(0, 16):
-        detected = 0
-        for i in range(0 , 100):
-            bits = [random.randint(0, 1) for i in range(N)]
-            crc = compute_CRC(bits, G_x)
-            packet = bits + crc
-
-            inject_errors(packet, k)
-
-            if not verify(packet, G_x, N):
-                detected += 1
-        prob.append(detected / 100)
-
-    return prob
-
-N_list = [32, 64, 128, 256, 512, 1024, 2048, 4096]
-
-G_list = {
-    2: [1, 0, 1],
-    3: [1, 0, 1, 1],
-    4: [1, 0, 0, 1, 1],
-    5: [1, 0, 0, 1, 0, 1],
-    6: [1, 0, 0, 0, 0, 1, 1],
-    7: [1, 1, 1, 0, 1, 1, 1, 0]
+crc_info = {
+    'crc2': {'r': 2, 'color': 'blue', 'label': 'CRC-2'},
+    'crc3': {'r': 3, 'color': 'green', 'label': 'CRC-3'},
+    'crc4': {'r': 4, 'color': 'orange', 'label': 'CRC-4'},
+    'crc7': {'r': 7, 'color': 'red', 'label': 'CRC-7'}
 }
 
-for r, G in G_list.items():
-    plt.figure()
-    for N in N_list:
-        exp = experiment(N, G)
-        plt.plot(np.arange(len(exp)), exp, label=f'N={N}')
+plt.figure(figsize=(12, 7))
 
-    plt.title(f"Вероятность обнаружения ошибок (r={r})")
-    plt.xlabel("Количество ошибок")
-    plt.ylabel("Вероятность обнаружения")
-    plt.grid(True)
-    plt.legend()
-    # plt.savefig(f'Polynome {r}')
+for file in glob.glob("crc*_results.txt"):
+    prefix = file.split('_')[0]
+    if prefix not in crc_info:
+        continue
 
+    try:
+        data = np.loadtxt(file, comments="#")
+        N_vals = data[:, 0]
+        p_undetected = data[:, 1]
+
+        info = crc_info[prefix]
+        r = info['r']
+        color = info['color']
+        label = info['label']
+
+        plt.plot(N_vals, p_undetected, 'o-', color=color, markersize=3, linewidth=1.5, label=label)
+
+        plt.axhline(y=2**(-r), color=color, linestyle=':', linewidth=1.2)
+
+        plt.axvline(x=2**r - 1, color=color, linestyle='--', linewidth=1.2)
+
+    except Exception as e:
+        print(f"Ошибка при чтении {file}: {e}")
+
+plt.title("Вероятность необнаружения двойных ошибок для разных CRC")
+plt.xlabel("Длина сообщения N")
+plt.ylabel("Вероятность необнаружения")
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+# plt.savefig("crc.png")
 plt.show()
