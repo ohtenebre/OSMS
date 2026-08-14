@@ -1,37 +1,36 @@
-# Лабораторные работы по курсу «Основы систем мобильной связи»
+# Laboratory Work: Fundamentals of Mobile Communication Systems
 
-Данный репозиторий содержит лабораторные работы, выполненные в рамках курса **«Основы систем мобильной связи»**.
+This repository contains the laboratory assignments completed for the course **"Fundamentals of Mobile Communication Systems"**.
 
-## Структура репозитория
+## Repository Structure
 
-Каждая лабораторная работа размещена в отдельной директории:
+Each laboratory assignment lives in its own directory:
 
-- `1lab/` — Лабораторная работа №1: [Временная и частотная формы сигналов. Преобразования
-Фурье. Дискретизация сигналов.]
-- `2lab/` — Лабораторная работа №2: [Проектирование радиопокрытия мобильных сетей.
-Модели распространения сигналов. Бюджеты каналов.]
-- `3lab/` — Лабораторная работа №3: [Корреляция дискретных сигналов]
-- `4lab/` — Лабораторная работа №4: [Изучение корреляционных свойств последовательностей, используемых для синхронизации в сетях мобильной связи]
-- `5lab/` — Лабораторная работа №5: [Циклический избыточный код. CRC]
-- `Расчётно-графическое задание` — полный цикл передачи текстовых данных:
-  - ASCII-кодирование/декодирование
-  - CRC-проверка (ЛР №5)
-  - Синхронизация по последовательности Голда (ЛР №4)
-  - BPSK-модуляция и корреляционный приём
-  - Спектральный анализ при разных длительностях символа
+- `1lab/` — Lab 1: Time and frequency domain signal representation. Fourier transforms. Signal sampling.
+- `2lab/` — Lab 2: Mobile network radio coverage design. Signal propagation models. Link budgets.
+- `3lab/` — Lab 3: Correlation of discrete signals.
+- `4lab/` — Lab 4: Correlation properties of synchronization sequences used in mobile networks (Gold sequences).
+- `5lab/` — Lab 5: Cyclic redundancy check (CRC).
+- `RGZ/` — Computational graphic assignment: a full text-data transmission chain:
+  - ASCII encoding/decoding
+  - CRC error detection (Lab 5)
+  - Gold sequence synchronization (Lab 4)
+  - BPSK modulation with correlation reception
+  - Spectral analysis for different symbol durations
 
-В каждой директории находится:
-- файл `README.md` с описанием работы,
-- исходный код / отчёт,
-- при необходимости — скрипты, данные или графики.
+Each directory contains:
 
-## Требования к запуску
+- a `README.md` describing the assignment and its results,
+- the source code and report,
+- and, where relevant, scripts, data files or plots.
+
+## Requirements
 
 - MATLAB
-- Python 3.8+, библиотеки: `numpy`, `matplotlib`
+- Python 3.8+ with `numpy` and `matplotlib`
 - gcc/g++
 
-## Автор
+## Author
 
-Студент группы ИА331, Рубцов Роман Кириллович
-Сибирский государственный университет телекоммуникаций и информатики (СибГУТИ), Новосибирск
+Student of group IA331, Rubtsov Roman Kirillovich
+Siberian State University of Telecommunications and Information Sciences (SibSUTIS), Novosibirsk
